@@ -13,7 +13,7 @@ export default function Learn() {
             title={module.title}
             desc={module.desc}
             path={module.path}
-            accent={index % 2 === 0 ? 'from-brand-500 to-cyan-400' : 'from-violet-500 to-fuchsia-400'}
+            accent={index % 2 === 0 ? 'from-brand-300 via-brand-200 to-white' : 'from-[#f7d7a8] via-[#fdebd2] to-white'}
           />
         ))}
       </div>

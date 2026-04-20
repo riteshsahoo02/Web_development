@@ -8,6 +8,8 @@ const characterSchema = new mongoose.Schema(
     pronunciationAudio: String,
     strokeOrderImage: String,
     exampleWords: [String],
+    strokeCount: Number,
+    strokeTips: [String],
     order: Number
   },
   { timestamps: true }

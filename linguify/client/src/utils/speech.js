@@ -1,54 +1,61 @@
-export function createSpeechRecognition() {
+export function createSpeechRecognition(lang = 'ja-JP') {
+  if (typeof window === 'undefined') return null
+
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
   if (!SpeechRecognition) return null
 
   const recognition = new SpeechRecognition()
-  recognition.lang = 'ja-JP'
-  recognition.interimResults = false
-  recognition.maxAlternatives = 1
+  recognition.lang = lang
+  recognition.interimResults = true
+  recognition.continuous = false
+  recognition.maxAlternatives = 3
   return recognition
 }
 
+function clean(text = '') {
+  return text
+    .toLowerCase()
+    .normalize('NFKC')
+    .replace(/[。、「」！？!?,.'"”“’‘:;()\-]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function wordSimilarity(a, b) {
+  const wordsA = a.split(/\s+/).filter(Boolean)
+  const wordsB = b.split(/\s+/).filter(Boolean)
+  if (!wordsA.length || !wordsB.length) return 0
+  const matches = wordsA.filter((word) => wordsB.includes(word)).length
+  return matches / Math.max(wordsA.length, wordsB.length)
+}
+
+function charNgramSimilarity(a, b) {
+  const charsA = [...a]
+  const charsB = [...b]
+  if (!charsA.length || !charsB.length) return 0
+
+  const makeNgrams = (chars) => {
+    if (chars.length === 1) return [chars[0]]
+    const grams = []
+    for (let i = 0; i < chars.length - 1; i += 1) grams.push(chars[i] + chars[i + 1])
+    return grams
+  }
+
+  const ngramsA = makeNgrams(charsA)
+  const ngramsB = makeNgrams(charsB)
+  const setB = new Set(ngramsB)
+  const matches = ngramsA.filter((gram) => setB.has(gram)).length
+  return matches / Math.max(ngramsA.length, ngramsB.length)
+}
+
 export function scoreTranscript(expected, actual) {
-  const clean = (text) => text.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, '').trim()
   const a = clean(expected)
   const b = clean(actual)
+
   if (!a || !b) return 0
   if (a === b) return 100
 
-  const wordsA = a.split(/\s+/)
-  const wordsB = b.split(/\s+/)
-  const matches = wordsA.filter((word) => wordsB.includes(word)).length
-  return Math.round((matches / Math.max(wordsA.length, wordsB.length)) * 100)
-}
-export function speakText(text, lang = 'ja-JP') {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-    return { ok: false, message: 'Speech synthesis is not supported in this browser.' }
-  }
-
-  const synth = window.speechSynthesis
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = lang
-  utterance.rate = 0.9
-  utterance.pitch = 1
-
-  const voices = synth.getVoices()
-  const preferredVoice =
-    voices.find((voice) => voice.lang === lang) ||
-    voices.find((voice) => voice.lang?.startsWith('ja')) ||
-    null
-
-  if (preferredVoice) {
-    utterance.voice = preferredVoice
-  }
-
-  synth.cancel()
-  synth.speak(utterance)
-
-  return {
-    ok: true,
-    message: preferredVoice
-      ? `Using voice: ${preferredVoice.name}`
-      : 'No dedicated Japanese voice found. Browser default voice was used.'
-  }
+  const hasSpaces = a.includes(' ') || b.includes(' ')
+  const similarity = hasSpaces ? wordSimilarity(a, b) : charNgramSimilarity(a, b)
+  return Math.max(0, Math.min(100, Math.round(similarity * 100)))
 }

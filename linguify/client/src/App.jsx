@@ -19,7 +19,7 @@ import { useAuth } from './context/AuthContext'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
-  if (loading) return <div className="section-container py-20 text-center text-slate-300">Loading...</div>
+  if (loading) return <div className="section-container py-20 text-center text-ink-700/70">Loading...</div>
   return user ? children : <Navigate to="/login" replace />
 }
 

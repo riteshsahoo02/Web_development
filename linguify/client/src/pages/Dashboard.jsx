@@ -29,12 +29,12 @@ export default function Dashboard() {
     <section className="section-container py-16">
       <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
         <div>
-          <div className="card overflow-hidden">
+          <div className="paper-panel overflow-hidden p-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-sm uppercase tracking-widest text-brand-300">Dashboard</p>
-                <h1 className="mt-3 text-4xl font-bold text-white">Welcome back, {user?.name}</h1>
-                <p className="mt-3 max-w-2xl text-slate-300">Keep going with your {user?.profile?.targetLanguage || 'target language'} journey. Complete lessons daily to build reading, listening, speaking, and conversation skill.</p>
+                <p className="kicker mb-4">Dashboard</p>
+                <h1 className="mt-1 text-4xl font-bold text-ink-900">Welcome back, {user?.name}</h1>
+                <p className="mt-3 max-w-2xl text-ink-700/80">Keep going with your {user?.profile?.targetLanguage || 'target language'} journey. Complete lessons daily to build reading, listening, speaking, and conversation skill.</p>
               </div>
               <Link to="/learn" className="primary-btn">Continue learning</Link>
             </div>
@@ -49,15 +49,15 @@ export default function Dashboard() {
         </div>
 
         <div className="card">
-          <p className="text-sm uppercase tracking-widest text-brand-300">Module progress</p>
-          <div className="mt-6 space-y-5">
+          <p className="kicker mb-5">Module progress</p>
+          <div className="space-y-5">
             {modules.map((module, index) => {
               const item = progress[index]
               return (
                 <div key={module.key}>
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-white">{module.title}</span>
-                    <span className="text-slate-400">{item?.score || 0}%</span>
+                    <span className="font-medium text-ink-900">{module.title}</span>
+                    <span className="text-ink-700/70">{item?.score || 0}%</span>
                   </div>
                   <ProgressBar value={item?.score || 0} />
                 </div>

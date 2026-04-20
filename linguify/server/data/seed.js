@@ -23,14 +23,78 @@ await Promise.all([
 ])
 
 await Character.insertMany([
-  { language: 'Japanese', symbol: 'あ', romanization: 'a', exampleWords: ['あさ', 'あい'], order: 1 },
-  { language: 'Japanese', symbol: 'い', romanization: 'i', exampleWords: ['いえ', 'いぬ'], order: 2 },
-  { language: 'Japanese', symbol: 'う', romanization: 'u', exampleWords: ['うみ', 'うた'], order: 3 },
-  { language: 'Japanese', symbol: 'え', romanization: 'e', exampleWords: ['えき', 'えほん'], order: 4 },
-  { language: 'Japanese', symbol: 'お', romanization: 'o', exampleWords: ['おちゃ', 'おと'], order: 5 },
-  { language: 'Japanese', symbol: 'か', romanization: 'ka', exampleWords: ['かさ', 'かお'], order: 6 },
-  { language: 'Japanese', symbol: 'き', romanization: 'ki', exampleWords: ['きた', 'きっぷ'], order: 7 },
-  { language: 'Japanese', symbol: 'く', romanization: 'ku', exampleWords: ['くるま', 'くつ'], order: 8 }
+  {
+    language: 'Japanese',
+    symbol: 'あ',
+    romanization: 'a',
+    exampleWords: ['あさ', 'あい'],
+    strokeCount: 3,
+    strokeTips: ['Start with the small top stroke.', 'Draw the taller center curve next.', 'Finish with the right loop smoothly.'],
+    order: 1
+  },
+  {
+    language: 'Japanese',
+    symbol: 'い',
+    romanization: 'i',
+    exampleWords: ['いえ', 'いぬ'],
+    strokeCount: 2,
+    strokeTips: ['Write the short left stroke first.', 'Place the taller curved right stroke second.'],
+    order: 2
+  },
+  {
+    language: 'Japanese',
+    symbol: 'う',
+    romanization: 'u',
+    exampleWords: ['うみ', 'うた'],
+    strokeCount: 2,
+    strokeTips: ['Add the small top dash first.', 'Sweep the lower curved stroke in one motion.'],
+    order: 3
+  },
+  {
+    language: 'Japanese',
+    symbol: 'え',
+    romanization: 'e',
+    exampleWords: ['えき', 'えほん'],
+    strokeCount: 2,
+    strokeTips: ['Keep the top line neat and light.', 'The second stroke is long and gently curved.'],
+    order: 4
+  },
+  {
+    language: 'Japanese',
+    symbol: 'お',
+    romanization: 'o',
+    exampleWords: ['おちゃ', 'おと'],
+    strokeCount: 3,
+    strokeTips: ['Start with the short top stroke.', 'Draw the long vertical curve through the center.', 'Close with the right-side loop.'],
+    order: 5
+  },
+  {
+    language: 'Japanese',
+    symbol: 'か',
+    romanization: 'ka',
+    exampleWords: ['かさ', 'かお'],
+    strokeCount: 3,
+    strokeTips: ['Left vertical line first.', 'Then add the top-right stroke.', 'Finish with the lower sweeping stroke.'],
+    order: 6
+  },
+  {
+    language: 'Japanese',
+    symbol: 'き',
+    romanization: 'ki',
+    exampleWords: ['きた', 'きっぷ'],
+    strokeCount: 4,
+    strokeTips: ['Top horizontal first.', 'Add the small middle horizontal.', 'Draw the long vertical through them.', 'Finish with the lower side stroke.'],
+    order: 7
+  },
+  {
+    language: 'Japanese',
+    symbol: 'く',
+    romanization: 'ku',
+    exampleWords: ['くるま', 'くつ'],
+    strokeCount: 1,
+    strokeTips: ['Use one clean diagonal curve from top left to bottom right.'],
+    order: 8
+  }
 ])
 
 await Vocabulary.insertMany([
@@ -75,44 +139,101 @@ await ListeningExercise.insertMany([
 
 await SpeakingExercise.insertMany([
   { language: 'Japanese', prompt: 'Say: Hello', expectedAnswer: 'こんにちは', translation: 'Hello', hint: 'Use the common daytime greeting.', level: 'beginner' },
-  { language: 'Japanese', prompt: 'Say: I am a student', expectedAnswer: 'わたしはがくせいです', translation: 'I am a student', hint: 'Use わたし, がくせい, and です.', level: 'beginner' }
+  { language: 'Japanese', prompt: 'Say: I am a student', expectedAnswer: 'わたしはがくせいです', translation: 'I am a student', hint: 'Use わたし, がくせい, and です.', level: 'beginner' },
+  { language: 'Japanese', prompt: 'Say: Please give me water', expectedAnswer: 'みずをください', translation: 'Please give me water', hint: 'Use みず and ください.', level: 'beginner' }
 ])
 
 await ConversationScenario.insertMany([
   {
     language: 'Japanese',
     title: 'Ordering at a café',
-    situation: 'You walk into a café and want to order water politely.',
+    situation: 'You walk into a café, greet the staff, order water, and finish the exchange politely.',
     level: 'beginner',
     steps: [
       {
         speaker: 'Staff',
         line: 'いらっしゃいませ。',
         translation: 'Welcome.',
-        choices: ['こんにちは', 'みずをください', 'ありがとう'],
-        correctChoice: 'こんにちは'
+        choices: ['こんにちは。', 'えきはどこですか。', 'がくせいです。'],
+        correctChoice: 'こんにちは。'
+      },
+      {
+        speaker: 'Staff',
+        line: 'こちらでおめしあがりですか。',
+        translation: 'Will you eat here?',
+        choices: ['はい、おねがいします。', 'ほんをよみます。', 'さようなら。'],
+        correctChoice: 'はい、おねがいします。'
       },
       {
         speaker: 'Staff',
         line: 'ごちゅうもんは？',
         translation: 'What would you like to order?',
-        choices: ['えきはどこですか。', 'みずをください。', 'わたしはがくせいです。'],
+        choices: ['みずをください。', 'こんにちは。', 'ともだちです。'],
         correctChoice: 'みずをください。'
+      },
+      {
+        speaker: 'Staff',
+        line: 'ほかにいかがですか。',
+        translation: 'Anything else?',
+        choices: ['それだけです。', 'えきはどこですか。', 'おちゃです。'],
+        correctChoice: 'それだけです。'
+      },
+      {
+        speaker: 'Staff',
+        line: 'かしこまりました。',
+        translation: 'Certainly.',
+        choices: ['ありがとうございます。', 'がんばって。', 'こんにちは。'],
+        correctChoice: 'ありがとうございます。'
+      },
+      {
+        speaker: 'Staff',
+        line: 'おまたせしました。',
+        translation: 'Thank you for waiting.',
+        choices: ['ありがとう。', 'おはよう。', 'いえです。'],
+        correctChoice: 'ありがとう。'
       }
     ]
   },
   {
     language: 'Japanese',
-    title: 'Asking for directions',
-    situation: 'You need to ask where the station is.',
+    title: 'Asking for directions to the station',
+    situation: 'You stop someone on the street, ask where the station is, and confirm the route.',
     level: 'beginner',
     steps: [
       {
         speaker: 'You',
-        line: 'How do you ask where the station is?',
-        translation: 'Select the best Japanese sentence.',
-        choices: ['えきはどこですか。', 'こんにちは。', 'ほんをよみます。'],
+        line: 'How do you politely get someone’s attention?',
+        translation: 'Choose the best opening line.',
+        choices: ['すみません。', 'ありがとう。', 'いただきます。'],
+        correctChoice: 'すみません。'
+      },
+      {
+        speaker: 'Local person',
+        line: 'はい？',
+        translation: 'Yes?',
+        choices: ['えきはどこですか。', 'みずをください。', 'がくせいです。'],
         correctChoice: 'えきはどこですか。'
+      },
+      {
+        speaker: 'Local person',
+        line: 'まっすぐいって、みぎです。',
+        translation: 'Go straight and turn right.',
+        choices: ['ありがとうございます。', 'こんにちは。', 'これです。'],
+        correctChoice: 'ありがとうございます。'
+      },
+      {
+        speaker: 'Local person',
+        line: 'あるいてごふんぐらいです。',
+        translation: 'It is about five minutes on foot.',
+        choices: ['ごふんですね。', 'ほんです。', 'ともだちです。'],
+        correctChoice: 'ごふんですね。'
+      },
+      {
+        speaker: 'Local person',
+        line: 'わかりましたか。',
+        translation: 'Did you understand?',
+        choices: ['はい、わかりました。', 'いいえ、みずです。', 'こんにちは。'],
+        correctChoice: 'はい、わかりました。'
       }
     ]
   }
