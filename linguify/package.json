@@ -1,0 +1,15 @@
+{
+  "name": "language-learning-mern-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": ["client", "server"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace server\" \"npm run dev --workspace client\"",
+    "client": "npm run dev --workspace client",
+    "server": "npm run dev --workspace server",
+    "install:all": "npm install && npm install --workspace client && npm install --workspace server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
